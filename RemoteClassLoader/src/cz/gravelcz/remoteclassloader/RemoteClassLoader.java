@@ -5,9 +5,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -63,23 +65,7 @@ public class RemoteClassLoader extends ClassLoader {
 	
 	@Override
 	protected Enumeration<URL> findResources(String name) throws IOException {
-		// this is kind of janky, but i couldn't think of another way of doing it.
-		return new Enumeration<URL>() {
-			
-			boolean tried = false;
-			
-			@Override
-			public boolean hasMoreElements() {
-				return !tried;
-			}
-			
-			@Override
-			public URL nextElement() {
-				tried = true;
-				return findResource(name);
-			}
-			
-		};
+		return (new Vector<URL>(Arrays.asList(findResource(name))).elements());
 	}
 	
 	@Override
